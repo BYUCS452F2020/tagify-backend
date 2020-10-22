@@ -11,7 +11,10 @@ export default class SqlUserDao implements IUserDao {
         await sql.connect(sqlconfig.string());
 
         try {
-            await sql.query(`insert into Users (SpotifyId, FirstName, LastName) values ('${user.spotifyId}', '${user.firstName}', '${user.lastName}')`);
+            const result = await sql.query(`insert into Users (SpotifyId, FirstName, LastName) values ('${user.spotifyId}', '${user.firstName}', '${user.lastName}')`);
+            if (result.rowsAffected[0] == 0) {
+                return null;
+            }
         } catch {
             return null;
         }
@@ -31,23 +34,21 @@ export default class SqlUserDao implements IUserDao {
         await sql.connect(sqlconfig.string());
 
         try {
-            await sql.query(`delete from Users where Id = ${id}`)
+            var result = await sql.query(`delete from Users where Id = ${id}`)
+            return result.rowsAffected[0] == 1;
         } catch {
             return false;
         }
-
-        return true;
     }
 
     async deleteUserFromSpotifyId(spotifyId: string) : Promise<boolean> {
         await sql.connect(sqlconfig.string());
 
         try {
-            await sql.query(`delete from Users where SpotifyId = '${spotifyId}'`)
+            var result = await sql.query(`delete from Users where SpotifyId = '${spotifyId}'`)
+            return result.rowsAffected[0] == 1;
         } catch {
             return false;
         }
-
-        return true;
     }
 }
