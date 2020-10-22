@@ -26,4 +26,28 @@ export default class SqlUserDao implements IUserDao {
             lastName: record.LastName,
         }
     }
+
+    async deleteUser(id: number) : Promise<boolean> {
+        await sql.connect(sqlconfig.string());
+
+        try {
+            await sql.query(`delete from Users where Id = ${id}`)
+        } catch {
+            return false;
+        }
+
+        return true;
+    }
+
+    async deleteUserFromSpotifyId(spotifyId: string) : Promise<boolean> {
+        await sql.connect(sqlconfig.string());
+
+        try {
+            await sql.query(`delete from Users where SpotifyId = '${spotifyId}'`)
+        } catch {
+            return false;
+        }
+
+        return true;
+    }
 }

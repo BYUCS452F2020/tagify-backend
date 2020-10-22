@@ -13,4 +13,16 @@ export default class TestUserDao implements IUserDao {
             })
         });
     }
+
+    deleteUser(id: number) : Promise<boolean> {
+        return new Promise<boolean>((resolve, reject) => {
+            resolve(true);
+        })
+    }
+
+    deleteUserFromSpotifyId(spotifyId: string) : Promise<boolean> {
+        return new Promise<boolean>((resolve, reject) => {
+            resolve(true);
+        })
+    }
 }

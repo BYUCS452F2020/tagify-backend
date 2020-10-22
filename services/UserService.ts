@@ -14,4 +14,18 @@ export default class UserService {
         
         return user;
     }
+
+    async deleteUser(id: number) : Promise<boolean> {
+        const dao = UserDaoFactory.create();
+        const success = await dao.deleteUser(id);
+
+        return success;
+    }
+
+    async deleteUserFromSpotifyId(spotifyId: string) : Promise<boolean> {
+        const dao = UserDaoFactory.create();
+        const success = await dao.deleteUserFromSpotifyId(spotifyId);
+
+        return success;
+    }
 }
