@@ -2,7 +2,7 @@ import IUserDao from "./interface/IUserDao";
 import SqlUserDao from "./sql/SqlUserDao";
 import TestUserDao from "./test/TestUserDao";
 
-let impl = "test";
+let impl = "sql";
 
 export const UserDaoFactory = class {
     static create() : IUserDao {

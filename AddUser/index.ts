@@ -5,18 +5,28 @@ import UserService from "../services/UserService";
 const httpTrigger: AzureFunction = async function (context: Context, req: HttpRequest): Promise<void> {
     const addUserRequest = parse(req);
     const service = new UserService();
-    const user = service.addUser(addUserRequest);
+    const user = await service.addUser(addUserRequest);
     const success = user != null;
 
-    context.res = {
-        status: success ? 200 : 400,
-        body: {
-            user: user,
+    if (success) {
+        context.res = {
+            status: 200,
+            body: {
+                success: true,
+                user: user,
+            }
+        };
+    } else {
+        context.res = {
+            status: 400,
+            body: {
+                success: false,
+            },
         }
-    };
+    }
 };
 
-const parse = function(req: HttpRequest) : AddUserRequest {
+const parse = function (req: HttpRequest): AddUserRequest {
     return {
         spotifyId: req.body.spotifyId,
         firstName: req.body.firstName,

@@ -8,9 +8,9 @@ export default class UserService {
      * @param addUserRequest Encapsulates the data of the user being added
      * @returns The user that was added to the system
      */
-    addUser(addUserRequest: AddUserRequest) : User {
+    async addUser(addUserRequest: AddUserRequest) : Promise<User> {
         const dao = UserDaoFactory.create();
-        const user = dao.addUser(addUserRequest);
+        const user = await dao.addUser(addUserRequest);
         
         return user;
     }
