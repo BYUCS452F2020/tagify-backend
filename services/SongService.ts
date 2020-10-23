@@ -1,6 +1,6 @@
 import { SongDaoFactory, UserDaoFactory, UserSongDaoFactory } from "../daos/daoFacotry";
 import AddSongsRequest from "../request_models/AddSongsRequest";
-import { AddSongResult } from "../result_models/AddSongResult";
+import AddSongResult from "../result_models/AddSongResult";
 
 export default class SongService {
     async addSongs(addSongsRequest: AddSongsRequest): Promise<AddSongResult> {
