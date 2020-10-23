@@ -35,6 +35,25 @@ export default class SqlSongDao implements ISongDao {
         }
     }
 
+    async getUserSongsFromTag(userId: number, tagId: number) : Promise<Song[]> {
+        await sql.connect(sqlconfig.string());
+
+        try {
+            let queryString = 
+                `select Songs.Id, Songs.SpotifyId from Songs ` + 
+                `join UserSongs on Songs.Id = UserSongs.SongId ` +
+                `join SongTags on Songs.Id = SongTags.SongId ` +
+                `where UserSongs.UserId = ${userId} and SongTags.TagId = ${tagId} `;
+
+            let result = await sql.query(queryString);
+            let songs = this.songsFromResult(result);
+
+            return songs;
+        } catch {
+            return null;
+        }
+    }
+
     private songsFromResult(result) : Song[] {
         return result.recordset.map(s => {
             return <Song> {

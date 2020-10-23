@@ -1,6 +1,8 @@
 import { SongDaoFactory, UserDaoFactory, UserSongDaoFactory } from "../daos/daoFacotry";
 import AddSongsRequest from "../request_models/AddSongsRequest";
+import GetTagSongsRequest from "../request_models/GetTagSongsRequest";
 import AddSongResult from "../result_models/AddSongResult";
+import GetTagSongsResult from "../result_models/GetTagSongsResult";
 
 export default class SongService {
     async addSongs(addSongsRequest: AddSongsRequest): Promise<AddSongResult> {
@@ -25,5 +27,17 @@ export default class SongService {
             songs: songs,
             userSongs: userSongs,
         };
+    }
+
+    async getTagSongs(getTagSongRequest: GetTagSongsRequest) : Promise<GetTagSongsResult> {
+        const songDao = SongDaoFactory.create();
+
+        const userId = getTagSongRequest.userId;
+        const tagId = getTagSongRequest.tagId;
+        const songs = await songDao.getUserSongsFromTag(userId, tagId);
+
+        return {
+            songs: songs,
+        }
     }
 }
