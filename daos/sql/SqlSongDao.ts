@@ -40,10 +40,10 @@ export default class SqlSongDao implements ISongDao {
 
         try {
             let queryString = 
-                `select Songs.Id, Songs.SpotifyId from Songs ` + 
-                `join UserSongs on Songs.Id = UserSongs.SongId ` +
-                `join SongTags on Songs.Id = SongTags.SongId ` +
-                `where UserSongs.UserId = ${userId} and SongTags.TagId = ${tagId} `;
+                `select Songs.Id, Songs.SpotifyId from Tags ` + 
+                `join SongTags on Tags.Id = SongTags.TagId ` +
+                `join Songs on Songs.Id = SongTags.SongId ` +
+                `where Tags.Id = ${tagId} and Tags.UserId = ${userId} `;
 
             let result = await sql.query(queryString);
             let songs = this.songsFromResult(result);
