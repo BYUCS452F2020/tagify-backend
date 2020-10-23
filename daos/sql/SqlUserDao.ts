@@ -7,6 +7,24 @@ import User from "../../data_models/User";
 import sqlconfig from "../../sqlConfig";
 
 export default class SqlUserDao implements IUserDao {
+    async getUser(id: number) : Promise<User> {
+        await sql.connect(sqlconfig.string());
+
+        try {
+            const result = await sql.query(`select * from Users where Id = ${id}`);
+            const record = result.recordset[0];
+
+            return {
+                id: record.Id,
+                spotifyId: record.SpotifyId,
+                firstName: record.FirstName,
+                lastName: record.LastName,
+            }
+        } catch {
+            return null;
+        }
+    }
+
     async addUser(user: AddUserRequest) : Promise<User> {
         await sql.connect(sqlconfig.string());
 
