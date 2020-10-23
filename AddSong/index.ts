@@ -7,11 +7,11 @@ const httpTrigger: AzureFunction = async function (context: Context, req: HttpRe
     if (validate(req)) {
         const addSongsRequest = parse(req);
         const service = new SongService();
-        await service.addSongs(addSongsRequest);
-        const success = true;
+        const result = await service.addSongs(addSongsRequest);
+        const success = result != null;
     
         if (success) {
-            successResult(context, { songs: "songs" });
+            successResult(context, result);
         } else {
             errorResult(context);
         }
