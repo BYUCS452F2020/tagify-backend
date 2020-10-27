@@ -4,6 +4,7 @@ require('dotenv').config();
 import Tag from "../../data_models/Tag";
 import sqlconfig from "../../sqlconfig";
 import ITagDao from "../interface/ITagDao";
+import SongTag from "../../data_models/SongTag";
 
 export default class SqlTagDao implements ITagDao {
     async getUserTagsFromSong(userId: number, songId: number) : Promise<Tag[]> {
@@ -64,7 +65,7 @@ export default class SqlTagDao implements ITagDao {
         }
     }
 
-    async deleteTag(tagName: String, userId: number): Promise<any> {
+    async deleteTag(tagName: String, userId: number) : Promise<any> {
         await sql.connect(sqlconfig.string());
         try {
             let queryString = `delete from Tags where UserId = ${userId} AND Name = '${tagName}'`;
@@ -84,4 +85,24 @@ export default class SqlTagDao implements ITagDao {
         }
     }
 
+    async addSongTag(tagId: number, songId: number) : Promise<SongTag> {
+        await sql.connect(sqlconfig.string());
+        try {
+            let queryString = `insert into SongTags (TagId, SongId) values (${tagId}, ${songId})`;
+
+            const result = await sql.query(queryString);
+            console.log(result);
+            if(result.rowsAffected[0] == 0) {
+                return null;
+            }
+
+            return {
+                songId: songId,
+                tagId: tagId
+            }
+        } catch (e) {
+            console.error(e);
+            return null;
+        }
+    }
 }
