@@ -35,12 +35,31 @@ export default class SqlUserSongDao implements IUserSongDao {
         }
     }
 
+    async getUserSongs(userId: number) : Promise<UserSong[]> {
+        await sql.connect(sqlconfig.string());
+        try {
+            let queryString = 
+            `select Songs.SpotifyId, UserSongs.*
+            from Songs join UserSongs
+            on Songs.Id = UserSongs.SongId
+            where UserSongs.UserId = ${userId}`;
+
+            let result = await sql.query(queryString);
+            let songList = this.userSongsFromResult(result);
+            return songList;
+        } catch (e) {
+            console.error(e);
+            return null;
+        }
+    }
+
     private userSongsFromResult(result) : UserSong[] {
         return result.recordset.map(s => {
             return <UserSong> {
                 id: s.Id,
                 userId: s.UserId,
                 songId: s.SongId,
+                spotifyId: s.SpotifyId
             }
         });
     }
