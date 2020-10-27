@@ -1,5 +1,6 @@
 import { TagDaoFactory } from "../daos/daoFacotry";
 import Tag from "../data_models/Tag";
+import SongTag from "../data_models/SongTag";
 import GetSongTagsRequest from "../request_models/GetSongTagsRequest";
 import GetSongTagsResult from "../result_models/GetSongTagsResult";
 
@@ -14,6 +15,14 @@ export default class TagService {
         return {
             tags: tags,
         }
+    }
+
+    async addSongTag(tagId: number, songId: number) : Promise<SongTag> {
+        return {
+            songId: songId,
+            tagId: tagId,
+            tagName: "asdfasdf"
+        };
     }
 
     async addTag(tagName: String, userId: number) : Promise<Tag> {
