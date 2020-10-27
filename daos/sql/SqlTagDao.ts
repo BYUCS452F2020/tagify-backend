@@ -37,7 +37,7 @@ export default class SqlTagDao implements ITagDao {
     async addTag(tagName: String, userId: number) : Promise<Tag> {
         await sql.connect(sqlconfig.string());
         try {
-            let queryString =  `insert into Tags (UserId, Name) values (${userId}, '${tagName}')`;
+            let queryString = `insert into Tags (UserId, Name) values (${userId}, '${tagName}')`;
 
             const result = await sql.query(queryString);
             console.log(result);
@@ -63,4 +63,25 @@ export default class SqlTagDao implements ITagDao {
             return null;
         }
     }
+
+    async deleteTag(tagName: String, userId: number): Promise<any> {
+        await sql.connect(sqlconfig.string());
+        try {
+            let queryString = `delete from Tags where UserId = ${userId} AND Name = '${tagName}'`;
+
+            const result = await sql.query(queryString);
+            console.log(result);
+            if(result.rowsAffected[0] == 0) {
+                return null;
+            }
+
+            return {
+                success: true
+            }
+        } catch (e) {
+            console.error(e);
+            return null;
+        }
+    }
+
 }

@@ -20,4 +20,9 @@ export default class TagService {
         const tagDao = TagDaoFactory.create();
         return await tagDao.addTag(tagName, userId);
     }
+
+    async deleteTag(tagName: String, userId: number) : Promise<any> {
+        const tagDao = TagDaoFactory.create();
+        return await tagDao.deleteTag(tagName, userId);
+    }
 }
