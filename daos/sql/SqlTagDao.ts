@@ -33,4 +33,34 @@ export default class SqlTagDao implements ITagDao {
             }
         });
     }
+
+    async addTag(tagName: String, userId: number) : Promise<Tag> {
+        await sql.connect(sqlconfig.string());
+        try {
+            let queryString =  `insert into Tags (UserId, Name) values (${userId}, '${tagName}')`;
+
+            const result = await sql.query(queryString);
+            console.log(result);
+            if(result.rowsAffected[0] == 0) {
+                return null;
+            }
+
+            const result2 = await sql.query(`select * from Tags where Id = @@Identity`);
+            const record = result2.recordset[0];
+
+            if(record.UserId != userId || record.Name != tagName) {
+                console.log("here");
+                return null;
+            }
+
+            return {
+                id: record.id,
+                userId: record.UserId,
+                name: record.Name
+            }
+        } catch (e) {
+            console.error(e);
+            return null;
+        }
+    }
 }
