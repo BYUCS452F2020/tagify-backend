@@ -1,5 +1,5 @@
 import Song from "../data_models/Song";
 
-export default interface GetTagSongsResult {
+export default interface GetSongsResult {
     songs: Song[];
 }
