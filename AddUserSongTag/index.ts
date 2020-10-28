@@ -4,11 +4,12 @@ import TagService from "../services/TagService";
 
 const httpTrigger: AzureFunction = async function (context: Context, req: HttpRequest): Promise<void> {
     if(validate(req)) {
-        const tagId = parseInt(req.query.tagId);
-        const songId = parseInt(req.query.songId);
+        const userId = parseInt(req.body.userId);
+        const tagId = parseInt(req.body.tagId);
+        const userSongId = parseInt(req.body.userSongId);
 
         const tagService = new TagService();
-        const result = await tagService.addSongTag(tagId, songId);
+        const result = await tagService.addUserSongTag(userId, tagId, userSongId);
         const success = (result != null);
 
         if (success) {
@@ -22,9 +23,10 @@ const httpTrigger: AzureFunction = async function (context: Context, req: HttpRe
 };
 
 const validate = function(req: HttpRequest) : boolean {
-    return (req.query.songId && req.query.tagId 
-        && !isNaN(parseInt(req.query.songId)) 
-        && !isNaN(parseInt(req.query.tagId)));
+    return (req.body.userId && req.body.userSongId && req.body.tagId 
+        && !isNaN(parseInt(req.body.userId)) 
+        && !isNaN(parseInt(req.body.userSongId)) 
+        && !isNaN(parseInt(req.body.tagId)));
 }
 
 export default httpTrigger;

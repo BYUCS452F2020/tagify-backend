@@ -1,4 +1,4 @@
-export default interface Song {
+export default interface UserSongTag {
     songId: number;
     tagId: number;
 }

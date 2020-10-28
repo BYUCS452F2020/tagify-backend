@@ -4,7 +4,7 @@ require('dotenv').config();
 import Tag from "../../data_models/Tag";
 import sqlconfig from "../../sqlconfig";
 import ITagDao from "../interface/ITagDao";
-import SongTag from "../../data_models/SongTag";
+import UserSongTag from "../../data_models/UserSongTag";
 
 export default class SqlTagDao implements ITagDao {
     async getUserTagsFromSong(userId: number, songId: number) : Promise<Tag[]> {
@@ -13,8 +13,9 @@ export default class SqlTagDao implements ITagDao {
         try {
             let queryString = 
                 `select Tags.Id, Tags.UserId, Tags.Name from Songs ` + 
-                `join SongTags on Songs.Id = SongTags.SongId ` +
-                `join Tags on Tags.Id = SongTags.TagId ` +
+                `join UserSongs on Songs.Id = UserSongs.SongId ` +
+                `join UserSongTags on UserSongs.Id = UserSongTags.UserSongId ` +
+                `join Tags on Tags.Id = UserSongTags.TagId ` +
                 `where Songs.Id = ${songId} and Tags.UserId = ${userId} `;
 
             let result = await sql.query(queryString);
@@ -85,10 +86,10 @@ export default class SqlTagDao implements ITagDao {
         }
     }
 
-    async addSongTag(tagId: number, songId: number) : Promise<SongTag> {
+    async addUserSongTag(userId: number, tagId: number, userSongId: number) : Promise<UserSongTag> {
         await sql.connect(sqlconfig.string());
         try {
-            let queryString = `insert into SongTags (TagId, SongId) values (${tagId}, ${songId})`;
+            let queryString = `insert into UserSongTags (UserId, TagId, UserSongId) values (${userId}, ${tagId}, ${userSongId})`;
 
             const result = await sql.query(queryString);
             console.log(result);
@@ -97,7 +98,7 @@ export default class SqlTagDao implements ITagDao {
             }
 
             return {
-                songId: songId,
+                songId: userSongId,
                 tagId: tagId
             }
         } catch (e) {
@@ -106,10 +107,10 @@ export default class SqlTagDao implements ITagDao {
         }
     }
 
-    async deleteSongTag(tagId: number, songId: number) : Promise<any> {
+    async deleteUserSongTag(tagId: number, userSongId: number) : Promise<boolean> {
         await sql.connect(sqlconfig.string());
         try {
-            let queryString = `delete from SongTags where songId=${songId} AND tagId=${tagId}`;
+            let queryString = `delete from UserSongTags where UserSongId=${userSongId} AND TagId=${tagId}`;
 
             const result = await sql.query(queryString);
             console.log(result);

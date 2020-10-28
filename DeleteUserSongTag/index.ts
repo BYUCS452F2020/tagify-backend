@@ -6,8 +6,8 @@ const httpTrigger: AzureFunction = async function (context: Context, req: HttpRe
     if(validate(req)) {
         const tagService = new TagService();
         const tagId = parseInt(req.query.tagId);
-        const songId = parseInt(req.query.songId);
-        const result = await tagService.deleteSongTag(tagId, songId);
+        const userSongId = parseInt(req.query.userSongId);
+        const result = await tagService.deleteUserSongTag(tagId, userSongId);
         const success = (result != null);
 
         if(success) {
@@ -21,8 +21,8 @@ const httpTrigger: AzureFunction = async function (context: Context, req: HttpRe
 };
 
 const validate = function(req: HttpRequest) : boolean {
-    return (req.query.songId && req.query.tagId
-        && !isNaN(parseInt(req.query.songId)) 
+    return (req.query.userSongId && req.query.tagId
+        && !isNaN(parseInt(req.query.userSongId)) 
         && !isNaN(parseInt(req.query.tagId)));
 }
 

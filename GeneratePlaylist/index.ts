@@ -22,14 +22,14 @@ const httpTrigger: AzureFunction = async function (context: Context, req: HttpRe
 };
 
 const validate = function(req: HttpRequest) : boolean {
-    return req.body.userId && req.body.songQuery
-        && !isNaN(parseInt(req.body.userId)) && Array.isArray(req.body.songQuery)
+    return req.query.userId && req.query.songQuery
+        && !isNaN(parseInt(req.query.userId)) && Array.isArray(JSON.parse(req.query.songQuery))
 }
 
 const parse = function(req: HttpRequest) : GeneratePlaylistRequest {
     return {
-        userId: req.body.userId,
-        songQuery: req.body.songQuery,
+        userId: parseInt(req.query.userId),
+        songQuery: JSON.parse(req.query.songQuery),
     }
 }
 

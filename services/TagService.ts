@@ -1,16 +1,16 @@
 import { TagDaoFactory } from "../daos/daoFacotry";
 import Tag from "../data_models/Tag";
-import SongTag from "../data_models/SongTag";
-import GetSongTagsRequest from "../request_models/GetSongTagsRequest";
-import GetSongTagsResult from "../result_models/GetSongTagsResult";
+import UserSongTag from "../data_models/UserSongTag";
+import GetUserSongTagsRequest from "../request_models/GetUserSongTagsRequest";
+import GetUserSongTagsResult from "../result_models/GetUserSongTagsResult";
 import SqlTagDao from "../daos/sql/SqlTagDao";
 
 export default class TagService {
-    async getSongTags(getSongTagsRequest: GetSongTagsRequest) : Promise<GetSongTagsResult> {
+    async getUserSongTags(getUserSongTagsRequest: GetUserSongTagsRequest) : Promise<GetUserSongTagsResult> {
         const tagDao = TagDaoFactory.create();
 
-        const userId = getSongTagsRequest.userId;
-        const songId = getSongTagsRequest.songId;
+        const userId = getUserSongTagsRequest.userId;
+        const songId = getUserSongTagsRequest.songId;
         const tags = await tagDao.getUserTagsFromSong(userId, songId)
 
         return {
@@ -18,14 +18,14 @@ export default class TagService {
         }
     }
 
-    async addSongTag(tagId: number, songId: number) : Promise<SongTag> {
+    async addUserSongTag(userId: number, tagId: number, userSongId: number) : Promise<UserSongTag> {
         const tagDao = TagDaoFactory.create();
-        return await tagDao.addSongTag(tagId, songId);
+        return await tagDao.addUserSongTag(userId, tagId, userSongId);
     }
 
-    async deleteSongTag(tagId: number, songId: number) : Promise<any> {
+    async deleteUserSongTag(tagId: number, songId: number) : Promise<boolean> {
         const tagDao = TagDaoFactory.create();
-        return await tagDao.deleteSongTag(tagId, songId);
+        return await tagDao.deleteUserSongTag(tagId, songId);
     }
 
     async addTag(tagName: String, userId: number) : Promise<Tag> {
@@ -33,7 +33,7 @@ export default class TagService {
         return await tagDao.addTag(tagName, userId);
     }
 
-    async deleteTag(tagName: String, userId: number) : Promise<any> {
+    async deleteTag(tagName: String, userId: number) : Promise<Tag> {
         const tagDao = TagDaoFactory.create();
         return await tagDao.deleteTag(tagName, userId);
     }
