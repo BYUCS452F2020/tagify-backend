@@ -5,4 +5,5 @@ export default interface ISongDao {
     addSongs(spotifyIds: string[]) : Promise<Song[]>;
 
     getUserSongsFromTag(userId: number, tagId: number) : Promise<Song[]>;
+    generatePlaylist(userId: number, songQuery: string[][]) : Promise<Song[]>;
 }
