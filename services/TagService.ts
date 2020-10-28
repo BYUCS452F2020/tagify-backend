@@ -23,6 +23,11 @@ export default class TagService {
         return await tagDao.addSongTag(tagId, songId);
     }
 
+    async deleteSongTag(tagId: number, songId: number) : Promise<any> {
+        const tagDao = TagDaoFactory.create();
+        return await tagDao.deleteSongTag(tagId, songId);
+    }
+
     async addTag(tagName: String, userId: number) : Promise<Tag> {
         const tagDao = TagDaoFactory.create();
         return await tagDao.addTag(tagName, userId);

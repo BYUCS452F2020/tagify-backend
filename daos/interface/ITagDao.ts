@@ -6,4 +6,5 @@ export default interface ITagDao {
     addTag(tagName: String, userId: number) : Promise<Tag>;
     deleteTag(tagName: String, userId: number) : Promise<any>;
     addSongTag(tagId: number, songId: number) : Promise<SongTag>;
+    deleteSongTag(tagId: number, songId: number) : Promise<SongTag>;
 }

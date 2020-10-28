@@ -105,4 +105,22 @@ export default class SqlTagDao implements ITagDao {
             return null;
         }
     }
+
+    async deleteSongTag(tagId: number, songId: number) : Promise<any> {
+        await sql.connect(sqlconfig.string());
+        try {
+            let queryString = `delete from SongTags where songId=${songId} AND tagId=${tagId}`;
+
+            const result = await sql.query(queryString);
+            console.log(result);
+            if(result.rowsAffected[0] == 0) {
+                return false;
+            }
+
+            return true;
+        } catch (e) {
+            console.error(e);
+            return false;
+        }
+    }
 }
