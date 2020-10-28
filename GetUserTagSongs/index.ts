@@ -1,6 +1,5 @@
 import { AzureFunction, Context, HttpRequest } from "@azure/functions"
-import { request } from "http";
-import GetTagSongsRequest from "../request_models/GetTagSongsRequest";
+import GetUserTagSongsRequest from "../request_models/GetUserTagSongsRequest";
 import { errorResult, successResult } from "../response";
 import SongService from "../services/SongService";
 
@@ -8,7 +7,7 @@ const httpTrigger: AzureFunction = async function (context: Context, req: HttpRe
     if (validate(req)) {
         const request = parse(req);
         const service = new SongService();
-        const result = await service.getTagSongs(request);
+        const result = await service.getUserTagSongs(request);
         const success = result != null;
         
     
@@ -27,7 +26,7 @@ const validate = function(req: HttpRequest) : boolean {
         && !isNaN(parseInt(req.query.userId)) && !isNaN(parseInt(req.query.tagId))
 }
 
-const parse = function(req: HttpRequest) : GetTagSongsRequest {
+const parse = function(req: HttpRequest) : GetUserTagSongsRequest {
     return {
         userId: parseInt(req.query.userId),
         tagId: parseInt(req.query.tagId),

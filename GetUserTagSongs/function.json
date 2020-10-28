@@ -15,5 +15,5 @@
       "name": "res"
     }
   ],
-  "scriptFile": "../dist/GetTagSongs/index.js"
+  "scriptFile": "../dist/GetUserTagSongs/index.js"
 }

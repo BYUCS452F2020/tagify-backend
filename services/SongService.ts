@@ -1,12 +1,10 @@
-import { constants } from "buffer";
 import { SongDaoFactory, UserDaoFactory, UserSongDaoFactory } from "../daos/daoFacotry";
 import AddSongsRequest from "../request_models/AddSongsRequest";
 import GeneratePlaylistRequest from "../request_models/GeneratePlaylistRequest";
-import GetTagSongsRequest from "../request_models/GetTagSongsRequest";
+import GetUserTagSongsRequest from "../request_models/GetUserTagSongsRequest";
 import AddSongResult from "../result_models/AddSongResult";
 import GeneratePlaylistResult from "../result_models/GeneratePlaylistResponse";
-import GetTagSongsResult from "../result_models/GetTagSongsResult";
-import GetSongsResult from "../result_models/GetTagSongsResult";
+import GetUserTagSongsResult from "../result_models/GetUserTagSongsResult";
 import GetUserSongsResult from "../result_models/GetUserSongResults";
 
 export default class SongService {
@@ -34,7 +32,7 @@ export default class SongService {
         };
     }
 
-    async getTagSongs(getTagSongRequest: GetTagSongsRequest) : Promise<GetSongsResult> {
+    async getUserTagSongs(getTagSongRequest: GetUserTagSongsRequest) : Promise<GetUserTagSongsResult> {
         const songDao = SongDaoFactory.create();
 
         const userId = getTagSongRequest.userId;
