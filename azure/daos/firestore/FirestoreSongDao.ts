@@ -1,18 +1,18 @@
-const admin = require('firebase-admin');
-const serviceAccount = require('../../tagify-firestore.json');
-
 import Song from "../../data_models/Song";
 import ISongDao from "../interface/ISongDao";
 
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount)
+import * as firebase from 'firebase-admin';
+import "../../tagify-firestore.json";
+const serviceAccount = require('../../tagify-firestore.json');
+firebase.initializeApp({
+  credential: firebase.credential.cert(serviceAccount)
 });
 
-const db = admin.firestore();
+const db = firebase.firestore();
 
 export default class FirestoreSongDao implements ISongDao {
     async addSong(spotifyId: string): Promise<Song> {
-        console.log(db.collection('users'));
+        console.log(await db.listCollections());
         return null;
     }
     async addSongs(spotifyIds: string[]): Promise<Song[]> {

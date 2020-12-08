@@ -1,3 +1,4 @@
+import FirestoreSongDao from "./firestore/FirestoreSongDao";
 import ISongDao from "./interface/ISongDao";
 import ITagDao from "./interface/ITagDao";
 import IUserDao from "./interface/IUserDao";
@@ -15,7 +16,7 @@ export const UserDaoFactory = class {
 
 export const SongDaoFactory = class {
     static create() : ISongDao {
-        return new SqlSongDao();
+        return new FirestoreSongDao();
     }
 }
 
