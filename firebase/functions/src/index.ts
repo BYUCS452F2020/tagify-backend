@@ -38,18 +38,6 @@ interface Tag {
     songs: Array<string>;
 }
 
-interface SongWithTags {
-    id: string;
-    name: string;
-    tags: Array<Tag>;
-}
-
-interface TagWithSongs {
-    id: string;
-    name: string;
-    songs: Array<Song>;
-}
-
 export const addUser = functions.https.onRequest(async (request, response) => {
     const newUser = request.body as User;
     const userRef = await db.collection('users').doc(newUser.id);
@@ -80,8 +68,7 @@ export const addSong = functions.https.onRequest(async (request, response) => {
     const songRef = await userRef.collection('songs').doc(song.id);
     await songRef.set({id: song.id, name: song.name});
     
-    const res: SongWithTags = { id: song.id, name: song.name, tags: [] }
-    response.send(res);
+    response.send(song);
 });
 
 export const addTag = functions.https.onRequest(async (request, response) => {
@@ -94,8 +81,7 @@ export const addTag = functions.https.onRequest(async (request, response) => {
     const tagRef = await userRef.collection('tags').doc(tag.id);
     await tagRef.set({id: tag.id, name: tag.name});
     
-    const res: TagWithSongs = { id: tag.id, name: tag.name, songs: [] }
-    response.send(res);
+    response.send(tag);
 });
 
 export const generatePlaylist = functions.https.onRequest(async (request, response) => {
