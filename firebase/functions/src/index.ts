@@ -16,10 +16,10 @@ interface AddSongRequest {
     songName: string;
 }
 
-// interface AddTagRequest {
-//     userId: string;
-//     tagName: string;
-// }
+interface AddTagRequest {
+    userId: string;
+    tagName: string;
+}
 
 interface Song {
     id: string;
@@ -35,6 +35,12 @@ interface SongWithTags {
     id: string;
     name: string;
     tags: Array<Tag>;
+}
+
+interface TagWithSongs {
+    id: string;
+    name: string;
+    songs: Array<Song>;
 }
 
 export const addUser = functions.https.onRequest(async (request, response) => {
@@ -71,13 +77,16 @@ export const addSong = functions.https.onRequest(async (request, response) => {
     response.send(res);
 });
 
-// export const addTag = functions.https.onRequest(async (request, response) => {
-//     const tagRequest = request.body as AddTagRequest;
-//     const userRef = await db.collection('users').doc(tagRequest.userId);
+export const addTag = functions.https.onRequest(async (request, response) => {
+    const tagRequest = request.body as AddTagRequest;
+    const userRef = await db.collection('users').doc(tagRequest.userId);
 
-//     const tagRef = await userRef.collection('tags');
-//     await songRef.set({id: song.id, name: song.name});
+    const tagId = await userRef.collection('tags').doc().id;
+    const tag: Tag = { id: tagId, name: tagRequest.tagName }
+
+    const tagRef = await userRef.collection('tags').doc(tag.id);
+    await tagRef.set({id: tag.id, name: tag.name});
     
-//     const res: SongWithTags = { id: song.id, name: song.name, tags: [] }
-//     response.send(res);
-// });
+    const res: TagWithSongs = { id: tag.id, name: tag.name, songs: [] }
+    response.send(res);
+});
