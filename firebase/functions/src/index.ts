@@ -21,14 +21,21 @@ interface AddTagRequest {
     tagName: string;
 }
 
+interface GeneratePlaylistRequest {
+    userId: string;
+    query: Array<Array<string>>;
+}
+
 interface Song {
     id: string;
     name: string;
+    tags: Array<string>;
 }
 
 interface Tag {
     id: string;
     name: string;
+    songs: Array<string>;
 }
 
 interface SongWithTags {
@@ -69,7 +76,7 @@ export const addSong = functions.https.onRequest(async (request, response) => {
     const songRequest = request.body as AddSongRequest;
     const userRef = await db.collection('users').doc(songRequest.userId);
 
-    const song: Song = { id: songRequest.songId, name: songRequest.songName }
+    const song: Song = { id: songRequest.songId, name: songRequest.songName, tags: [] }
     const songRef = await userRef.collection('songs').doc(song.id);
     await songRef.set({id: song.id, name: song.name});
     
@@ -82,11 +89,46 @@ export const addTag = functions.https.onRequest(async (request, response) => {
     const userRef = await db.collection('users').doc(tagRequest.userId);
 
     const tagId = await userRef.collection('tags').doc().id;
-    const tag: Tag = { id: tagId, name: tagRequest.tagName }
+    const tag: Tag = { id: tagId, name: tagRequest.tagName, songs: [] }
 
     const tagRef = await userRef.collection('tags').doc(tag.id);
     await tagRef.set({id: tag.id, name: tag.name});
     
     const res: TagWithSongs = { id: tag.id, name: tag.name, songs: [] }
     response.send(res);
+});
+
+export const generatePlaylist = functions.https.onRequest(async (request, response) => {
+    const playlistRequest = request.body as GeneratePlaylistRequest;
+    const userRef = await db.collection('users').doc(playlistRequest.userId);
+
+    const songs = await userRef.collection('songs').get();
+    if (songs.empty) {
+        response.status(400).send('The user does not have any songs');
+        return
+    }
+
+    let resultSongs: Array<Song> = [];
+    const query = playlistRequest.query;
+    songs.forEach((s) => {
+        const song = s.data() as Song;
+        let matchesQuery = false;
+        query.forEach((innerQuery) => {
+            let matchesInnerQuery = true;
+            innerQuery.forEach((queryTag) => {
+                if (song.tags.indexOf(queryTag) < 0) {
+                    matchesInnerQuery = false;
+                }
+            });
+            if (matchesInnerQuery) {
+                matchesQuery = true;
+            }
+        });
+
+        if (matchesQuery) {
+            resultSongs.push(song);
+        }
+    });
+
+    response.send(resultSongs);
 });
