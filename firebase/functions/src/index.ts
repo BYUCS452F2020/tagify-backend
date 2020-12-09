@@ -6,8 +6,8 @@ import AddTagRequest from './requests/addTagRequest';
 import GeneratePlaylistRequest from './requests/generatePlaylistRequest';
 import Song from './models/song';
 import Tag from './models/tag';
-admin.initializeApp();
 
+admin.initializeApp();
 const db = admin.firestore();
 
 export const addUser = functions.https.onRequest(async (request, response) => {
