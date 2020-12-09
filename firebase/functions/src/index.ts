@@ -38,7 +38,7 @@ export const addSong = functions.https.onRequest(async (request, response) => {
 
     const song: Song = { id: songRequest.songId, name: songRequest.songName, tags: [] }
     const songRef = await userRef.collection('songs').doc(song.id);
-    await songRef.set({id: song.id, name: song.name});
+    await songRef.set(song);
     
     response.send(song);
 });
@@ -51,7 +51,7 @@ export const addTag = functions.https.onRequest(async (request, response) => {
     const tag: Tag = { id: tagId, name: tagRequest.tagName, songs: [] }
 
     const tagRef = await userRef.collection('tags').doc(tag.id);
-    await tagRef.set({id: tag.id, name: tag.name});
+    await tagRef.set(tag);
     
     response.send(tag);
 });
