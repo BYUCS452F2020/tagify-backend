@@ -4,6 +4,9 @@ import User from './models/user';
 import AddSongRequest from './requests/addSongRequest';
 import AddTagRequest from './requests/addTagRequest';
 import GeneratePlaylistRequest from './requests/generatePlaylistRequest';
+import AddSongTagRequest from './requests/addTagToSongRequest';
+import GetSongRequest from './requests/getSongRequest';
+import GetTagRequest from './requests/getTagRequest';
 import Song from './models/song';
 import Tag from './models/tag';
 
@@ -54,6 +57,79 @@ export const addTag = functions.https.onRequest(async (request, response) => {
     await tagRef.set(tag);
     
     response.send(tag);
+});
+
+/*
+export const addTagToSong2 = functions.https.onRequest(async (request, response) => {
+    const req = request.body as AddSongTagRequest;
+    const songDoc = await db.collection('users').doc(req.userId).collection('songs').doc(req.songId).get();
+    const songTags = await songDoc.data();
+    const tags : Array<string> = songTags?.tags;
+    tags.push(req.tagId);
+    await db.collection('users').doc(req.userId).collection('songs').doc(req.songId).update({
+        tags: tags
+    });
+    response.send({
+        success: true
+    });    
+});
+
+export const addSongToTag2 = functions.https.onRequest(async (request, response) => {
+    const req = request.body as AddSongTagRequest;
+    const tagDoc = await db.collection('users').doc(req.userId).collection('tags').doc(req.tagId).get();
+    const tagSongs = await tagDoc.data();
+    const songs : Array<string> = tagSongs?.songs;
+    songs.push(req.tagId);
+    await db.collection('users').doc(req.userId).collection('tags').doc(req.tagId).update({
+        songs: songs
+    });
+    response.send({
+        success: true
+    });    
+});
+*/
+
+async function addTagToSong(req:AddSongTagRequest) {
+    const songDoc = await db.collection('users').doc(req.userId).collection('songs').doc(req.songId).get();
+    const songTags = await songDoc.data();
+    const tags : Array<string> = songTags?.tags;
+    tags.push(req.tagId);
+    await db.collection('users').doc(req.userId).collection('songs').doc(req.songId).update({
+        tags: tags
+    });
+}
+
+async function addSongToTag(req:AddSongTagRequest) {
+    const tagDoc = await db.collection('users').doc(req.userId).collection('tags').doc(req.tagId).get();
+    const tagSongs = await tagDoc.data();
+    const songs : Array<string> = tagSongs?.songs;
+    songs.push(req.songId);
+    await db.collection('users').doc(req.userId).collection('tags').doc(req.tagId).update({
+        songs: songs
+    });
+}
+
+export const addSongTag = functions.https.onRequest(async (request, response) => {
+    const req = request.body as AddSongTagRequest;
+    await addSongToTag(req);
+    await addTagToSong(req);
+    response.send({
+        success: true
+    });
+});
+
+export const getSong = functions.https.onRequest(async (request, response) => {
+    const req = request.body as GetSongRequest;
+    const songDoc = await db.collection('users').doc(req.userId).collection('songs').doc(req.songId).get();
+    const songData = await songDoc.data();
+    response.send(songData);
+});
+
+export const getTag = functions.https.onRequest(async (request, response) => {
+    const req = request.body as GetTagRequest;
+    const tagDoc = await db.collection('users').doc(req.userId).collection('tags').doc(req.tagId).get();
+    const tagData = await tagDoc.data();
+    response.send(tagData);
 });
 
 export const generatePlaylist = functions.https.onRequest(async (request, response) => {
