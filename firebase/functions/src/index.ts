@@ -1,42 +1,14 @@
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
+import User from './models/user';
+import AddSongRequest from './requests/addSongRequest';
+import AddTagRequest from './requests/addTagRequest';
+import GeneratePlaylistRequest from './requests/generatePlaylistRequest';
+import Song from './models/song';
+import Tag from './models/tag';
 admin.initializeApp();
 
 const db = admin.firestore();
-
-interface User {
-    id: string;
-    firstName: string;
-    lastName: string;
-}
-
-interface AddSongRequest {
-    userId: string;
-    songId: string;
-    songName: string;
-}
-
-interface AddTagRequest {
-    userId: string;
-    tagName: string;
-}
-
-interface GeneratePlaylistRequest {
-    userId: string;
-    query: Array<Array<string>>;
-}
-
-interface Song {
-    id: string;
-    name: string;
-    tags: Array<string>;
-}
-
-interface Tag {
-    id: string;
-    name: string;
-    songs: Array<string>;
-}
 
 export const addUser = functions.https.onRequest(async (request, response) => {
     const newUser = request.body as User;
